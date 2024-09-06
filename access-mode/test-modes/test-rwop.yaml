@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-nginx-rwop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-rwop
+  template:
+    metadata:
+      labels:
+        app: test-rwop
+    spec:
+      containers:
+        - name: test-rwop
+          image: nginx
+          volumeMounts:
+            - mountPath: "/usr/share/nginx/html"
+              name: volume-rwop
+      volumes:
+        - name: volume-rwop
+          persistentVolumeClaim:
+            claimName: pvc-rwop

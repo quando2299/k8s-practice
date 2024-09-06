@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment-rwx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-rwx
+  template:
+    metadata:
+      labels:
+        app: nginx-rwx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          volumeMounts:
+            - mountPath: "/usr/share/nginx/html"
+              name: volume-rwx
+      volumes:
+        - name: volume-rwx
+          persistentVolumeClaim:
+            claimName: pvc-rwx

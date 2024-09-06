@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment-rox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-rox
+  template:
+    metadata:
+      labels:
+        app: nginx-rox
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          volumeMounts:
+            - mountPath: "/usr/share/nginx/html" # Mount path for the ROX volume
+              name: volume-rox
+              readOnly: true # Read-only access for ROX
+      volumes:
+        - name: volume-rox
+          persistentVolumeClaim:
+            claimName: pvc-rox
