@@ -1,0 +1,16 @@
+image:
+  repository: quando2299/simple-python-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+resources:
+  limits:
+    memory: "128Mi"
+    cpu: "500m"
+
+service:
+  type: ClusterIP
+  port: 8080
+
+configmap:
+  name: db-config-json
