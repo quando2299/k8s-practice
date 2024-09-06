@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: timestamp-job
+  namespace: k8s-resources
+spec:
+  completions: 10
+  parallelism: 3
+  template:
+    metadata:
+      labels:
+        app: timestamp-job
+    spec:
+      containers:
+        - name: timestamp-container
+          image: busybox
+          command: [
+              "sh",
+              "-c",
+              "echo 'Hello k8s Job!' > /data/message.txt && sleep 3600",
+            ] # Keep the container running for a while
+          volumeMounts:
+            - name: output-volume
+              mountPath: /data
+      restartPolicy: OnFailure
+      volumes:
+        - name: output-volume
+          emptyDir: {}

@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: timestamp-cronjob
+  namespace: k8s-resources
+spec:
+  schedule: "*/1 * * * *" # Runs every minute; adjust to "*/10 * * * *" for every 10 minutes if needed
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: timestamp-job
+        spec:
+          containers:
+            - name: timestamp-container
+              image: busybox
+              command:
+                [
+                  "sh",
+                  "-c",
+                  "index=$(ls /data/message*.txt 2>/dev/null | wc -l); echo 'Hello k8s CronJob!' > /data/message$((index + 1)).txt && sleep 300",
+                ]
+              volumeMounts:
+                - name: output-volume
+                  mountPath: /data
+          restartPolicy: OnFailure
+          volumes:
+            - name: output-volume
+              emptyDir: {}
